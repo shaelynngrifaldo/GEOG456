@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assessment 2: Hurrican Sam Map</Map></title>
+</head>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+crossorigin=""></script>
+<style>
+    #map { height: 500px;  }
+    #title {
+        position: relative;
+        font-size: 24px;
+        z-index: 1000;
+        background: white;
+        color: black;
+        padding: 10px;
+        font-size;
+    }
+    #satelliteImage {
+        display: block;
+            margin: 10px auto; /* Center the image */
+            max-width: 100%;
+            height: auto;
+    }
+</style>
+<body>
+    <div id ="title"><a href="https://en.wikipedia.org/wiki/Hurricane_Sam">Hurricane Sam Storm Map</a></div>
+    <a href="https://en.wikipedia.org/wiki/Hurricane_Sam#/media/File:Sam_2021-09-26_1625Z.jpg" target="_blank">
+        <img id="satelliteImage" src="https://example.com/path/to/storm_satellite_image.jpg" alt="Storm Satellite Image">
+    </a>
+    <div id="map"></div>
+    <!-- Script tag with an address to the source of a js script -->
+    <script src="./data/SAM.js"></script>
+    <script>
+        var PotentialLandingPoint1 = [17.6266,-61.7713]
+        var PotenialLandingPoint2= [38.5348,-28.6300]
+        var map = L.map('map').setView([35,-40], 2.5);
+        var OSM = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(map);
+        var Esri_OceanImagery = L.tileLayer('https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri - Sources: GEBCO, NOAA, CHS, OSU, UNH, CSUMB, National Geographic, DeLorme, NAVTEQ, and Esri'
+    }).addTo(map);
+
+         var markers = L.marker(PotentialLandingPoint1, PotenialLandingPoint2).bindPopup("<b>Potential Landing Point for Hurrican Sam</b>").addTo(map);
+         var geojsonMarkerOptions = {
+             radius: 8,
+             fillColor: "#82DEF9",
+            color: "#000",
+             weight: 1,
+             opacity: 1,
+             fillOpacity: 0.8
+          };
+          var myWaypoints= L.geoJSON(assessment_data, {
+             pointToLayer: function (feature, latlng) {
+                  return L.circleMarker(latlng, geojsonMarkerOptions);
+            }
+         }).addTo(map);
+         var baseMaps = {
+    "OpenStreetMap": OSM,
+    "ESRI Ocean Images": Esri_OceanImagery
+};
+
+     var overlayMaps = {
+            "Hurricane Sam Locations": myWaypoints,
+            "Potential Landing Point of Hurricane Sam": markers
+
+        };
+    var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(map);   
+               
+</script>
+</body>
+</html>
