@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate Array</title>
+</head>
+<style>
+     body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 36px; /* Increased font size */
+            color: #333; /* Dark color */
+            margin: 30px 0; /* Set margin top and bottom */
+        }
+
+        .button {
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+    
+</style>
+<body>
+    <h1>Click the buttons to generate an array</h1>
+
+    <button id ="showAllButton" class ="button">Show All Air Pollutants</button>
+    <button id="showUniqueButton" class ="button"> Show Total Different Air Pollutants</button>
+    <script src ="data.js"></script>
+    <script>
+        document.getElementById("showAllButton").addEventListener("click", function() {
+            const allPollutantNames = data.map(item => item.Name);
+            console.log('All Pollutants:', allPollutantNames);
+            });
+        document.getElementById("showUniqueButton").addEventListener("click", function() {
+            const uniquePollutantNames = Array.from(new Set(data.map(item => item.Name)));
+            console.log('Unique Pollutants:', uniquePollutantNames);
+        }
+    );
+            
+    </script>
+</body>
+</html>
