@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+</head>
+<script src ="data.js"></script>
+<body>
+
+<h2>NYC Air Quality Table </h2>
+
+<table id="myTable">
+  <tr>
+    <th>Neighborhood Name</th>
+    <th>Pollutant</th>
+    <th>Time Period</th>
+    <th>Data Value</th>
+  </tr>
+ </table>
+ </body>
+ <script>
+    var x = document.getElementById('myTable'); 
+    console.log(data);
+    var dataObjects = data.objects[0];
+    console.log(dataObjects);
+
+    for (var i =0; i < dataObjects.length; i++) {
+        var myNewRow = document.createElement('tr');
+        var myNewCell1 = document.createElement('td');
+        var myNewCell2 = document.createElement('td');
+        var myNewCell3 = document.createElement('td');
+        var myNewCell4 = document.createElement('td');
+        myNewCell1.innerText = dataObjects[i].Place ? dataObjects[i].Place : "N/A";
+        myNewCell2.innerText = dataObjects[i].Pollutant ? dataObjects[i].Pollutant : "N/A";
+        myNewCell3.innerText = dataObjects[i].Time_Period ? dataObjects[i].Time_Period : "N/A";
+        myNewCell4.innerText = dataObjects[i].Value ? dataObjects[i].Value : "N/A";
+
+        var value = parseFloat(dataObjects[i].Value);
+        if (!isNaN(value)) {
+            if (value >= 0 && value <= 10) {
+                myNewCell4.style.backgroundColor = 'green';
+            } else if (value > 10 && value <= 15) {
+                myNewCell4.style.backgroundColor = 'yellow';
+            } else if (value > 15 && value <= 20) {
+                myNewCell4.style.backgroundColor = 'orange';
+            } else if (value > 20 && value <= 26) {
+                myNewCell4.style.backgroundColor = 'red';
+            }
+        }
+
+        myNewRow.appendChild(myNewCell1)
+        myNewRow.appendChild(myNewCell2)
+        myNewRow.appendChild(myNewCell3)
+        myNewRow.appendChild(myNewCell4)
+        x.appendChild(myNewRow)
+    } //end of loop
+ </script>
