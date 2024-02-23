@@ -1,4 +1,4 @@
-Unique ID,Name,Geo Type Name,Geo Join ID,Geo Place Name,Time Period,Start_Date,Data Value
+Unique_ID,Pollutant,Geo Type Name,Geo Join ID,Place,Time_Period,Start_Date,Value
 667327,Nitrogen dioxide (NO2),UHF34,104,Pelham - Throgs Neck,Annual Average 2020,1/1/20,16.19
 740910,Nitrogen dioxide (NO2),UHF42,106,High Bridge - Morrisania,Annual Average 2021,1/1/21,18.04
 741006,Nitrogen dioxide (NO2),UHF42,410,Rockaways,Annual Average 2021,1/1/21,11.41
