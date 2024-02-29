@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet with Slider</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin=""></script>
+    <script src="./2018.js"></script>
+    <script src="./2019.js"></script>
+    <script src="./2020.js"></script>
+  
+</head>
+    <style>
+        #map {
+            width: 100%;
+            height: 500px;
+
+        }
+        .circle-title {
+        position: absolute;
+        z-index: 999;
+        background-color: red;
+        border: 1px solid black;
+        padding: 5px;
+        font-weight: bold;
+    }
+    </style>
+    
+    
+<body>
+    
+</br>
+<h1> NYC Nitrogen Dioxide Pollutant Measurements for the Summers of 2018 to 2020</h1>
+<h3 id="theSummerH3elementID"> Summers 2018-2020</h3>
+<input id="myRange" type="range" name="season" value="0" min="0" max="2" oninput="moveSlider(this.value)">
+<br>
+Measurments over Time
+    <div id="map"></div>
+
+<<script>
+    var map = L.map('map').setView([40.7128, -74.0060], 10);      
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    }).addTo(map);
+
+    var myData = [summer18, summer19, summer20]; // Your JavaScript datasets
+        var order = ['Summer 2018','Summer 2019','Summer 2020'];
+
+        var pollutant;
+        var titleMarkers = [];
+
+        function moveSlider(value) {
+        var season = myData[value].features;
+        if (pollutant) {
+            map.removeLayer(pollutant);
+            titleMarkers.forEach(marker => map.removeLayer(marker));
+            titleMarkers = [];
+        }
+        pollutant = L.geoJSON(season, {
+            style: function(feature) {
+                return {
+                    color: "#ff7800",
+                    weight: 0.25,
+                    opacity: 0.65
+                };
+            },
+            pointToLayer: function(feature, latlng) {
+                return L.circle(latlng, {
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                    radius: 5000
+                }).setStyle({fillColor: '#f03'});
+            },
+            onEachFeature: function(feature, layer) {
+                var properties = feature.properties;
+                var popupContent = '<b>Borough:</b> ' + properties['Geo Place Name'] + '<br><b>Data Value:</b> ' + properties['Data Value'];
+                layer.bindPopup(popupContent);
+                layer.openPopup();
+            }
+        }).addTo(map);
+
+        season.forEach(feature => {
+        var latlng = [feature.geometry.coordinates[1], feature.geometry.coordinates[0]];
+        var title = L.divIcon({className: 'circle-title', html: feature.properties['Geo Place Name']});
+        var titleMarker = L.marker(latlng, {icon: title}).addTo(map);
+        titleMarkers.push(titleMarker);
+    });
+    document.getElementById('theSummerH3elementID').innerHTML = order[value];
+    }
+    var dataValueDisplay = document.getElementById('dataValue');
+    dataValueDisplay.innerHTML = "Data Value: " + season[0].properties['Data Value']; // Assuming the first feature has the same value for all boroughs
+
+    moveSlider(0);
+     </script/
+</body>
+</html>
