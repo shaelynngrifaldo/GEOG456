@@ -1,4 +1,4 @@
-var summer20 = {
+var summer2020 = {
     "type": "FeatureCollection",
     "features": [
       {

@@ -14,89 +14,152 @@
     <script src="./2018.js"></script>
     <script src="./2019.js"></script>
     <script src="./2020.js"></script>
-  
 </head>
-    <style>
-        #map {
-            width: 100%;
-            height: 500px;
-
-        }
-        .circle-title {
-        position: absolute;
-        z-index: 999;
-        background-color: red;
-        border: 1px solid black;
-        padding: 5px;
-        font-weight: bold;
+<style>
+    #map {
+        width: 100%;
+        height: 500px;
     }
-    </style>
-    
-    
+    .legend {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .legend-item {
+            margin-bottom: 5px;
+        }
+
+        .legend-circle {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+</style>
 <body>
-    
-</br>
-<h1> NYC Nitrogen Dioxide Pollutant Measurements for the Summers of 2018 to 2020</h1>
-<h3 id="theSummerH3elementID"> Summers 2018-2020</h3>
-<input id="myRange" type="range" name="season" value="0" min="0" max="2" oninput="moveSlider(this.value)">
-<br>
-Measurments over Time
+    <h1>NYC Nitrogen Dioxide Pollutant Measurements for the Summers of 2018 to 2020</h1>
+    <h3 id="theSummerH3elementID">Summers 2018-2020</h3>
+    <input id="myRange" type="range" name="season" value="2018" min="2018" max="2020" oninput="moveSlider(this.value)">
+    <br>
     <div id="map"></div>
+    <div style="text-align: center;">
+     <p>Year: <span id="yearDisplay">2018</span></p>
+    </div>
+    <div id="legend" class="legend">
+        <div class="legend-item"><div class="legend-circle" style="background-color: #ff7800; width: 10px; height: 10px;"></div> 0-5 ppb</div>
+        <div class="legend-item"><div class="legend-circle" style="background-color: #ff7800; width: 20px; height: 20px;"></div> 5-10 ppb</div>
+        <div class="legend-item"><div class="legend-circle" style="background-color: #ff7800; width: 30px; height: 30px;"></div> 10-15 ppb</div>
+        <div class="legend-item"><div class="legend-circle" style="background-color: #ff7800; width: 40px; height: 40px;"></div> 15-20 ppb</div>
+    </div>
+    
 
-<<script>
-    var map = L.map('map').setView([40.7128, -74.0060], 10);      
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    }).addTo(map);
 
-    var myData = [summer18, summer19, summer20]; // Your JavaScript datasets
-        var order = ['Summer 2018','Summer 2019','Summer 2020'];
-
-        var pollutant;
-        var titleMarkers = [];
+    <script>
+       window.onload = function() {
+        var slider = document.getElementById("myRange");
+        if (slider) {
+            slider.addEventListener("input", function() {
+                moveSlider(this.value);
+            });
+        } else {
+            console.error("Slider element with ID 'myRange' not found.");
+        }
+    };
 
         function moveSlider(value) {
-        var season = myData[value].features;
-        if (pollutant) {
-            map.removeLayer(pollutant);
-            titleMarkers.forEach(marker => map.removeLayer(marker));
-            titleMarkers = [];
+            // Your code to handle slider movement goes here
+            console.log("Slider value changed to:", value);
         }
-        pollutant = L.geoJSON(season, {
-            style: function(feature) {
-                return {
-                    color: "#ff7800",
-                    weight: 0.25,
-                    opacity: 0.65
-                };
-            },
-            pointToLayer: function(feature, latlng) {
-                return L.circle(latlng, {
-                    color: 'red',
-                    fillColor: '#f03',
-                    fillOpacity: 0.5,
-                    radius: 5000
-                }).setStyle({fillColor: '#f03'});
-            },
-            onEachFeature: function(feature, layer) {
-                var properties = feature.properties;
-                var popupContent = '<b>Borough:</b> ' + properties['Geo Place Name'] + '<br><b>Data Value:</b> ' + properties['Data Value'];
-                layer.bindPopup(popupContent);
-                layer.openPopup();
-            }
+
+        
+            var map = L.map('map').setView([40.7128, -74.0060], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
         }).addTo(map);
+       
 
-        season.forEach(feature => {
-        var latlng = [feature.geometry.coordinates[1], feature.geometry.coordinates[0]];
-        var title = L.divIcon({className: 'circle-title', html: feature.properties['Geo Place Name']});
-        var titleMarker = L.marker(latlng, {icon: title}).addTo(map);
-        titleMarkers.push(titleMarker);
-    });
-    document.getElementById('theSummerH3elementID').innerHTML = order[value];
-    }
-    var dataValueDisplay = document.getElementById('dataValue');
-    dataValueDisplay.innerHTML = "Data Value: " + season[0].properties['Data Value']; // Assuming the first feature has the same value for all boroughs
+        var markers = {};
+        var baseSize = 5;
+        var scalingFactor = 0.5;
 
-    moveSlider(0);
-     </script/
+        function updateMap(selectedYear) {
+            document.getElementById('yearDisplay').innerText = selectedYear;
+            console.log('updateMap called with year:', selectedYear);
+
+            var data;
+
+            if (selectedYear === '2018') {
+                data = summer18;
+            } else if (selectedYear === '2019') {
+                data = summer19;
+            } else if (selectedYear === '2020') {
+                data = summer2020;
+            } else {
+                console.error('Invalid year:', selectedYear);
+                return;
+            }
+
+            if (data && data.features) {
+                data.features.forEach(function(feature) {
+                    var pollutantData = feature.properties['Data Value'];
+                     var markerSize = baseSize + (pollutantData ? pollutantData * scalingFactor : 0);
+
+                    var lat = feature.geometry.coordinates[1];
+                    var lng = feature.geometry.coordinates[0];
+                    var name = feature.properties['Geo Place Name'];
+                    var markerSize;
+
+                    // Adjust marker size based on data value range
+                    if (pollutantData >= 0 && pollutantData < 5) {
+                        markerSize = baseSize + 5;
+                    } else if (pollutantData >= 5 && pollutantData < 10) {
+                        markerSize = baseSize + 10;
+                    } else if (pollutantData >= 10 && pollutantData < 15) {
+                        markerSize = baseSize + 15;
+                    } else if (pollutantData >= 15 && pollutantData <= 20) {
+                        markerSize = baseSize + 20;
+                    } else {
+                        markerSize = baseSize;
+                    }
+                    if (markers[name]) {
+                        map.removeLayer(markers[name]);
+                    }
+                    var marker = L.circleMarker([lat, lng], {
+                        radius: markerSize,
+                        fillColor: "#ff7800",
+                        color: "#000",
+                        weight: 1,
+                        opacity: 1,
+                        fillOpacity: 0.8
+                    }).addTo(map).bindPopup("<b>Borough:</b> " + name + "<br><b>Data Value:</b> " + pollutantData);
+
+                    markers[name] = marker;
+                });
+            } else {
+                console.error('Data is undefined or missing features:', data);
+            }
+        }
+
+     function moveSlider(value) {
+     updateMap(value);
+      }
+    //     document.getElementById('yearSlider').addEventListener('input', function(event) {
+    // var selectedYear = event.target.value;
+    // updateMap(selectedYear);
+    //     }
+    //     );
+    //     // Initialize the map with the first year
+    //     updateMap(2018);
+
+  </script>
 </body>
 </html>
+        
