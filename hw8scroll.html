@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 8 Image Opacity Control with Scroll Bar</title>
+    <style>
+        /* Style for container */
+        .container {
+            position: relative; /* Set container position to relative */
+            width: 50%; /* Adjust container width */
+            margin: 50px auto; /* Center container */
+        }
+        /* Style for images */
+        .container img {
+            position: absolute; /* Set image position to absolute */
+            top: 0;
+            left: 0;
+            max-width: 100%; /* Limit image width */
+            height: auto; /* Maintain aspect ratio */
+            opacity: 0; /* Initially hide images */
+            transition: opacity 0.5s ease; /* Add transition for smooth opacity change */
+        }
+    </style>
+</head>
+<body>
+    <h1>Homework 8 Image Opacity Control with Scroll Bar</h1>
+
+    <div class="container">
+        <img src="2012.png" id="image2012" alt="Image 2012">
+        <img src="2020.png" id="image2020" alt="Image 2020">
+    </div>
+
+    <input type="range" min="0" max="100" value="50" id="opacityRange">
+
+    <script>
+        // Get the range input and images
+        const rangeInput = document.getElementById('opacityRange');
+        const image2012 = document.getElementById('image2012');
+        const image2020 = document.getElementById('image2020');
+
+        // Function to update image opacity
+        function updateOpacity() {
+            // Calculate opacity values for each image
+            const opacityValue = rangeInput.value / 100;
+            const opacity2012 = 1 - opacityValue; // Opacity of 2012 image decreases
+            const opacity2020 = opacityValue;      // Opacity of 2020 image increases
+
+            // Set opacity for each image
+            image2012.style.opacity = opacity2012;
+            image2020.style.opacity = opacity2020;
+        }
+
+        // Add event listener to range input
+        rangeInput.addEventListener('input', updateOpacity);
+
+        // Initial call to set initial opacity
+        updateOpacity();
+    </script>
+</body>
+</html>

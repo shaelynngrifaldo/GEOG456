@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homework 8 Image Selection with Buttons</title>
+    <style>
+        /* Style for image container */
+        #imageContainer {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        /* Style for images */
+        #selectedImage {
+            max-width: 500px; /* Limit image width */
+            height: auto;
+            display: block;
+            margin: 0 auto; /* Center image horizontally */
+            border: 2px solid #ccc; /* Add border */
+            border-radius: 5px; /* Add border radius */
+        }
+        /* Style for buttons */
+        button {
+            padding: 10px 20px; /* Add padding */
+            font-size: 16px; /* Increase font size */
+            background-color: #4CAF50; /* Green background */
+            color: white; /* White text */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Add border radius */
+            cursor: pointer; /* Add pointer cursor */
+            transition: background-color 0.3s ease; /* Smooth transition */
+            margin-right: 10px; /* Add margin between buttons */
+        }
+        /* Style for buttons on hover */
+        button:hover {
+            background-color: #45a049; /* Darker green */
+        }
+    </style>
+</head>
+<body>
+    <h1>Homework 8 Image Selection with Buttons</h1>
+
+    <!-- Container for the image and text -->
+    <div id="imageContainer">
+        <!-- Initial image and text -->
+        <img id="selectedImage" src="2012.png" alt="Kenan Stadium">
+        <p id="imageText">Kenan Stadium</p>
+    </div>
+
+    <!-- Buttons to select images -->
+    <button onclick="changeImage('2012.png', 'Kenan Stadium 2012')">2012</button>
+    <button onclick="changeImage('2018.png', 'Kenan Stadium 2018')">2018</button>
+    <button onclick="changeImage('2020.png', 'Kenan Stadium 2020')">2020</button>
+
+    <script>
+        // Function to change the selected image and text
+        function changeImage(imageSrc, text) {
+            // Get the selected image element and set its src attribute
+            const selectedImage = document.getElementById('selectedImage');
+            selectedImage.src = imageSrc;
+            
+            // Get the text element and change its content
+            const imageText = document.getElementById('imageText');
+            imageText.textContent = text;
+        }
+    </script>
+</body>
+</html>
